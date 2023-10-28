@@ -23,10 +23,7 @@ driver = webdriver.Chrome(
 # maxime the controlled browser window
 driver.fullscreen_window()
 
-# to store the post scraped data
-posts = []
-
-def get_post_info(url):
+def get_post_info(url,posts):
     # connect to the target URL in Selenium
     driver.get(url)
     # retrieve the list of post HTML elements
@@ -88,6 +85,15 @@ def get_post_info(url):
         posts.append(post)
 
 def scrape_subreddit(subreddit_url,page_amount,file_name):
+    # we need restart chrome driver for next scrape
+    driver = webdriver.Chrome(
+        service=ChromeService(ChromeDriverManager().install()),
+        options=options
+    )
+    # maxime the controlled browser window
+    driver.fullscreen_window()
+    # to store the post scraped data
+    posts = []
     # initialize the page number
     page_number = 0
     # initialize the page URL
@@ -97,7 +103,7 @@ def scrape_subreddit(subreddit_url,page_amount,file_name):
 
     while page_number < page_amount:
         # get the post info for the current page
-        get_post_info(page_url)
+        get_post_info(page_url,posts)
         
         page_number += 1
         
@@ -127,11 +133,10 @@ def scrape_subreddit(subreddit_url,page_amount,file_name):
     driver.quit()
 
 # get 'top month' subreddit info
-#scrape_subreddit('https://old.reddit.com/top/?sort=top&t=month',math.inf,'top_month_subreddit')
+scrape_subreddit('https://old.reddit.com/top/?sort=top&t=month',math.inf,'top_month_subreddit')
 # get 'top year' subreddit info
-#scrape_subreddit('https://old.reddit.com/top/?sort=top&t=year',math.inf,'top_year_subreddit')
+scrape_subreddit('https://old.reddit.com/top/?sort=top&t=year',math.inf,'top_year_subreddit')
 # get 'top all' subreddit info
-#scrape_subreddit('https://old.reddit.com/top/?sort=top&t=all',math.inf,'top_all_subreddit')
-
-scrape_subreddit('https://old.reddit.com/r/popular/?geo_filter=GLOBAL',2,'popular_everywhera_subreddit')
-scrape_subreddit('https://old.reddit.com/r/popular/?geo_filter=AR',2,'popular_ar_subreddit')
+scrape_subreddit('https://old.reddit.com/top/?sort=top&t=all',math.inf,'top_all_subreddit')
+# get 'popular_everywhere' 1000 page info
+scrape_subreddit('https://old.reddit.com/r/popular/',1000,'popular_everywhere_1000')
