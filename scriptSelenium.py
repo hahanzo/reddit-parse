@@ -99,6 +99,8 @@ def scrape_subreddit(subreddit_url,page_amount,file_name):
     # initialize the page URL
     page_url = subreddit_url
 
+    start_time = time.time()  # Record the start time
+
     driver.get(page_url)
 
     while page_number < page_amount:
@@ -120,6 +122,10 @@ def scrape_subreddit(subreddit_url,page_amount,file_name):
 
         print("page",page_number)
 
+    end_time = time.time()  # Record the end time
+    elapsed_time = end_time - start_time
+
+    print(f"Scraping completed in {elapsed_time:.2f} seconds")
     # export the scraped data to a JSON file
     with open(f'{file_name}.json', 'w', encoding='utf-8') as file:
         json.dump({'posts': posts}, file, indent=4, ensure_ascii=False)
@@ -138,5 +144,5 @@ scrape_subreddit('https://old.reddit.com/top/?sort=top&t=month',math.inf,'top_mo
 scrape_subreddit('https://old.reddit.com/top/?sort=top&t=year',math.inf,'top_year_subreddit')
 # get 'top all' subreddit info
 scrape_subreddit('https://old.reddit.com/top/?sort=top&t=all',math.inf,'top_all_subreddit')
-# get 'popular_everywhere' 1000 page info
-scrape_subreddit('https://old.reddit.com/r/popular/',1000,'popular_everywhere_1000')
+# get 'hot_everywhere' 1500 page info
+scrape_subreddit('https://old.reddit.com/',1500,'hot_everywhere_1500')
